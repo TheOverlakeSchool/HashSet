@@ -2,21 +2,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class HashIntSet implements IntSet {
+public class HashSet<T> implements Set<T> {
 
     private int size;
-    private List<Integer>[] elements;
+    private List<T>[] elements;
     public static final int DEFAULT_CAPACITY = 11;
     public static final double LOAD_FACTOR = .75;
 
     @SuppressWarnings("unchecked")
-    HashIntSet() {
+    HashSet() {
         size = 0;
         elements = new List[DEFAULT_CAPACITY];
     }
 
     @Override
-    public void add(int value) {
+    public void add(T value) {
         ensureCapacity();
         if (contains(value)) {
             return;
@@ -32,22 +32,22 @@ public class HashIntSet implements IntSet {
 
     private void ensureCapacity() {
         if ((double) size / elements.length > LOAD_FACTOR){
-            List<Integer>[] newElements = new List[elements.length * 2];
+            List<T>[] newElements = new List[elements.length * 2];
 
         }
     }
 
     @Override
-    public void remove(int value) {
+    public void remove(T value) {
         if (contains(value)) {
             int index = hash(value);
-            elements[index].remove(Integer.valueOf(value));
+            elements[index].remove(value);
             size--;
         }
     }
 
     @Override
-    public boolean contains(int value) {
+    public boolean contains(T value) {
         int index = hash(value);
         if (elements[index] == null) {
             return false;
@@ -55,16 +55,16 @@ public class HashIntSet implements IntSet {
         return elements[index].contains(value);
     }
 
-    private int hash(int value) {
-        return Math.abs(value) % elements.length;
+    private int hash(T value) {
+        return value.hashCode() % elements.length;
     }
 
     public String toString() {
         StringJoiner sj = new StringJoiner(", ","[","]");
-        for (List<Integer> list : elements) {
+        for (List<T> list : elements) {
             if (list != null) {
-                for (int j : list) {
-                    sj.add(Integer.toString(j));
+                for (T j : list) {
+                    sj.add(j.toString());
                 }
             }
 
